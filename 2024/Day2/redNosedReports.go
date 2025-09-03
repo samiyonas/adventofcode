@@ -23,33 +23,43 @@ func mapInt(list []string) []int {
 	return result
 }
 
-func increasing(list []int, n int) int {
-	tolerate := 0
-	for i := 1; i < n - 1; i++ {
-		if tolerate > 1 {
-			return 0
+func increasing(list []int) bool {
+	for i := 0; i < len(list) - 1; i++ {
+		diff := list[i + 1] - list[i]
+		if list[i] >= list[i + 1] || diff > 3 || diff < 1 {
+			return false
 		}
 
-		if list[i] >= list[i + 1] || list[i + 1] - list[i] < 1 || list[i + 1] - list[i] > 3 {
-			tolerate += 1
-		}
 	}
-
-	return 1
+	return true
 }
 
-func decreasing(list []int, n int) int {
-	tolerate := 0
-	for i := 1; i < n - 1; i++ {
-		if tolerate > 1 {
-			return 0
+func decreasing(list []int) bool {
+	for i := 0; i < len(list) - 1; i++ {
+		diff := list[i] - list[i + 1] 
+		if list[i] <= list[i + 1] || diff > 3 || diff < 1 {
+			return false
 		}
-		if list[i] <= list[i + 1] || list[i] - list[i + 1] < 1 || list[i] - list[i + 1] > 3 {
-			tolerate += 1
+
+	}
+	return true
+}
+
+func isSafe(list []int) bool {
+	if increasing(list) || decreasing(list) {
+		return true
+	}
+
+	for i := 0; i < len(list); i++ {
+		newList := append([]int{}, list[:i]...)
+		newList = append(newList, list[i + 1:]...)
+
+		if increasing(newList) || decreasing(newList) {
+			return true
 		}
 	}
 
-	return 1
+	return false
 }
 
 func main() {
@@ -71,10 +81,8 @@ func main() {
 			continue
 		}
 
-		if s[0] > s[1] && (s[0] - s[1] >= 1 && s[0] - s[1] <= 3) {
-			safe += decreasing(s, len(s))
-		} else if s[0] < s[1] && (s[1] - s[0] >= 1 && s[1] - s[0] <= 3) {
-			safe += increasing(s, len(s))
+		if isSafe(s) {
+			safe++
 		}
 	}
 
