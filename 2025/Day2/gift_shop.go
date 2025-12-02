@@ -84,5 +84,7 @@ func main() {
 		log.Fatal("couldn't open input.txt")
 	}
 
+	defer file.Close()
+
 	log.Println(part2(file))
 }
